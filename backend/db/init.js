@@ -1,7 +1,10 @@
 const Database = require('better-sqlite3');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, '..', 'data', 'blog.db');
+// Default database file; can be overridden via the DB_PATH environment
+// variable (used by `npm run verify` to run checks against an isolated
+// database so the real blog.db is never touched).
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'blog.db');
 
 let db;
 

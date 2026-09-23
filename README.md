@@ -98,6 +98,25 @@ npm run dev
 
 The frontend will be available at `http://localhost:5173`
 
+## One-command Verification
+
+Run the full article-save pipeline — sample data initialization, server startup, and key save-scenario checks — with a single command:
+
+```bash
+cd backend
+npm run verify            # use PORT=3101 npm run verify to pick another port
+```
+
+What it does:
+
+1. **Preflight** — checks Node.js >= 18, backend dependencies, database directory writability, and port availability. Missing dependencies, a non-writable database directory, or an occupied port each produce a targeted hint and exit code `1`.
+2. **Seed** — writes the 15 sample articles into an isolated `backend/data/verify.db` (the real `backend/data/blog.db` is never touched).
+3. **Start** — boots the API server against the verify database and waits until it is ready.
+4. **Save-scenario checks** — login, unauthorized save (401), validation failure (400) followed by a successful retry (201), Markdown body round-trip, edit/save, 404 handling, list/tag reflection after save, and cleanup back to the baseline.
+5. **Teardown** — stops the server and deletes `verify.db`, so repeated runs never pollute the database.
+
+Exit code is `0` when all checks pass and `1` otherwise, so it is safe to use in scripts and CI. Existing create/edit/Markdown-preview/save behavior is unchanged — the checks exercise the same API the frontend uses.
+
 ## Features
 
 - **Article Management**: Create, read, update, and delete blog articles
@@ -130,7 +149,7 @@ The frontend will be available at `http://localhost:5173`
 
 - Server port: `3001` (configurable via `PORT` environment variable)
 - JWT secret: `blog-platform-secret-key` (hardcoded in middleware/auth.js)
-- Database file: `backend/data/blog.db`
+- Database file: `backend/data/blog.db` (overridable via `DB_PATH` environment variable)
 
 ### Frontend
 

@@ -9,7 +9,13 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Initialize database
-initDb();
+try {
+  initDb();
+} catch (err) {
+  console.error(`Failed to initialize database: ${err.message}`);
+  console.error('Check that the backend/data directory exists and is writable, then try again.');
+  process.exit(1);
+}
 
 // Middleware
 app.use(cors());
@@ -29,6 +35,15 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use (EADDRINUSE).`);
+    console.error(`Stop the process using this port, or start on another one: PORT=${Number(PORT) + 1} npm run dev`);
+    process.exit(1);
+  }
+  throw err;
 });
