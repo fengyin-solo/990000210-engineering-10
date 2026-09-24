@@ -1,0 +1,6 @@
+{
+  "title": "链路自检样例文章-E2E",
+  "summary": "用于验证文章创建、编辑、Markdown 预览与保存链路的固定样例数据，重复执行不会残留。",
+  "tags": ["链路自检", "Markdown", "E2E"],
+  "body": "# 链路自检样例文章\n\n这是一篇**用于工程链路自检**的样例文章，覆盖编辑器常用的 Markdown 结构：\n\n## 正文结构\n\n- 无序列表项一\n- 无序列表项二\n\n1. 有序列表项一\n2. 有序列表项二\n\n> 引用：保存后重新读取，正文必须逐字一致。\n\n`inline code` 与代码块：\n\n```javascript\nconst saved = await api.post('/articles', articleData)\nconsole.log(saved.data.id)\n```\n\n| 字段 | 用途 |\n| --- | --- |\n| title | 标题 |\n| body | Markdown 正文 |\n\n[链接示例](https://example.com)\n\n---\n\n末尾标记：E2E-MARKER-20260924\n"
+}
